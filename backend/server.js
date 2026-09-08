@@ -56,5 +56,9 @@ app.use((err, req, res, _next) => {
   res.status(err.status || 500).json({ success: false, data: null, message: isProd ? "Terjadi kesalahan" : (err.message || "Internal error") });
 });
 
-const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`Warung POS API jalan di http://localhost:${port}`));
+export default app;
+
+if (process.env.VERCEL !== "1") {
+  const port = process.env.PORT || 5000;
+  app.listen(port, () => console.log(`Warung POS API jalan di http://localhost:${port}`));
+}
