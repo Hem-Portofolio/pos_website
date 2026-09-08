@@ -6,9 +6,9 @@ export async function authMiddleware(req, res, next) {
     const token = header.startsWith("Bearer ") ? header.slice(7) : null;
     if (!token) return res.status(401).json({ success: false, data: null, message: "Token tidak ditemukan" });
 
-    // Dev mock token: hanya di non-production untuk demo tanpa Supabase key asli
+    // Mock token untuk demo — izinkan jika ALLOW_MOCK=true (untuk Vercel demo) atau non-production
     if (token.startsWith("mock.jwt.")) {
-      if (process.env.NODE_ENV === "production") {
+      if (process.env.NODE_ENV === "production" && process.env.ALLOW_MOCK !== "true") {
         return res.status(401).json({ success: false, data: null, message: "Token mock tidak diizinkan di production" });
       }
       const parts = token.split(".");
