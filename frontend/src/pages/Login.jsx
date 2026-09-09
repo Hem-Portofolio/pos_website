@@ -4,7 +4,7 @@ import { useAuthStore } from "../stores/authStore";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 
-const roleRedirect = { admin: "/admin", kasir: "/pos", waiter: "/waiter", dapur: "/kitchen" };
+const roleRedirect = { admin: "/admin", user: "/waiter" };
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -45,7 +45,7 @@ export default function Login() {
               <span className="text-white">Laporan</span> jelas.
             </h1>
             <p className="text-white/70 mt-4 max-w-[50ch] text-[15px] leading-relaxed">
-              Satu layar untuk pelayan, kasir, dapur, dan owner. Pesanan dari meja langsung tercetak di dapur secara realtime — tanpa nota hilang.
+              Pesan dari meja, bayar, dapur proses realtime — admin kelola menu & laporan.
             </p>
 
             <div className="mt-7 grid grid-cols-3 gap-3 max-w-[520px]">
@@ -140,7 +140,7 @@ export default function Login() {
             <div className="mt-4 rounded-xl bg-stone-50 border border-stone-200 px-4 py-3 flex items-start gap-3">
               <span className="mt-0.5 h-6 w-6 rounded-full bg-brass/20 border border-brass/30 grid place-items-center text-[11px] font-bold text-[#6B4F1D]">i</span>
               <p className="text-xs leading-relaxed text-stone-600">
-                <span className="font-bold text-stone-700">Tips:</span> Owner → Ringkasan & Laporan, Kasir → POS, Pelayan → Peta Meja, Dapur → Layar Dapur. Semua sinkron realtime.
+                <span className="font-bold text-stone-700">Tips:</span> Admin → Ringkasan, Menu, Laporan & Dapur. User → Pesan & Kasir. Login demo: <code className="px-1 py-0.5 bg-white border rounded">admin@warungpos.id / admin123</code> & <code className="px-1 py-0.5 bg-white border rounded">user@warungpos.id / user123</code>
               </p>
             </div>
 

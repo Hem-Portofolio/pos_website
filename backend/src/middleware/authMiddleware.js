@@ -13,10 +13,10 @@ export async function authMiddleware(req, res, next) {
       }
       const parts = token.split(".");
       const role = parts[2] || "admin";
-      if (!["admin","kasir","waiter","dapur"].includes(role)) {
+      if (!["admin","user"].includes(role)) {
         return res.status(401).json({ success: false, data: null, message: "Role tidak valid" });
       }
-      const emailMap = { admin: "admin@warungpos.id", kasir: "kasir@warungpos.id", waiter: "waiter@warungpos.id", dapur: "dapur@warungpos.id" };
+      const emailMap = { admin: "admin@warungpos.id", user: "user@warungpos.id" };
       req.user = { id: `mock-${role}`, email: emailMap[role] || "demo@warungpos.id", role, profile: null, raw: null };
       req.token = token;
       return next();
@@ -38,7 +38,7 @@ export async function authMiddleware(req, res, next) {
       role = data?.role || null;
     }
     // fallback: role dari user_metadata jika ada
-    if (!role) role = user.user_metadata?.role || "waiter";
+    if (!role) role = user.user_metadata?.role || "user";
 
     req.user = { id: user.id, email: user.email, role, profile, raw: user };
     req.token = token;

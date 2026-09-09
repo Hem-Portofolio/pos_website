@@ -8,7 +8,7 @@ cp .env.example .env   # isi SUPABASE_URL, ANON_KEY, SERVICE_KEY
 npm install
 npm run dev            # http://localhost:5000
 ```
-Migration: jalankan `backend/migrations/001_pos_schema.sql` di Supabase SQL Editor.
+Migration: jalankan `backend/migrations/001_pos_schema.sql` (baru) atau `002_simplify_roles.sql` jika sudah ada DB lama (4 role → 2 role) di Supabase SQL Editor.
 
 ### 2. Frontend
 ```bash
@@ -19,10 +19,8 @@ npm run dev            # http://localhost:5173
 ```
 
 Login demo (tanpa Supabase juga jalan via mock):
-- admin@warungpos.id / admin123 → /admin
-- kasir@warungpos.id / kasir123 → /pos
-- waiter@warungpos.id / waiter123 → /waiter
-- dapur@warungpos.id / dapur123 → /kitchen
+- admin@warungpos.id / admin123 → /admin (Ringkasan, Menu, Laporan, Dapur)
+- user@warungpos.id / user123 → /waiter (Pesan & Kasir)
 
 ## Arsitektur
 - Auth: Supabase Auth → JWT di `Authorization: Bearer <token>` → `authMiddleware` verifikasi via `supabase.auth.getUser()` → `roleMiddleware` cek `users.role` → RLS di DB.

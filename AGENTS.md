@@ -35,9 +35,9 @@ VITE_API_URL=http://localhost:5000       # if empty, fetch uses relative "" → 
 - Never commit `.env`. Both packages have `.env.example`.
 
 ## Auth — Mock vs Supabase
-- Backend `src/middleware/authMiddleware.js:10` accepts `mock.jwt.<role>.<ts>` tokens. Allowed only if `NODE_ENV!=production` OR `ALLOW_MOCK=true`. Role must be `admin|kasir|waiter|dapur`.
-- Real tokens verified via `supabase.auth.getUser(token)` then role looked up from `users` table via `supabaseAdmin` (service key bypasses RLS), fallback `user.user_metadata.role`.
-- Frontend `src/stores/authStore.js` is mock-only (Zustand + `localStorage` `token`/`wp_user`), calls `demoUsers` from `src/data/mock.js`. Demo logins (`frontend/src/data/mock.js:52`): `admin@warungpos.id/admin123`, `kasir@warungpos.id/kasir123`, `waiter@warungpos.id/waiter123`, `dapur@warungpos.id/dapur123`. `GET /api/auth/me` goes through `lib/api.js` which always sends `Authorization: Bearer <token>`.
+- Backend `src/middleware/authMiddleware.js:10` accepts `mock.jwt.<role>.<ts>` tokens. Allowed only if `NODE_ENV!=production` OR `ALLOW_MOCK=true`. Role must be `admin|user` (legacy kasir/waiter/dapur → user via `002_simplify_roles.sql`).
+- Real tokens verified via `supabase.auth.getUser(token)` then role looked up from `users` table via `supabaseAdmin` (service key bypasses RLS), fallback `user.user_metadata.role` (default `user`).
+- Frontend `src/stores/authStore.js` is mock-only (Zustand + `localStorage` `token`/`wp_user`), calls `demoUsers` from `src/data/mock.js`. Demo logins (`frontend/src/data/mock.js:52`): `admin@warungpos.id/admin123`, `user@warungpos.id/user123`. `GET /api/auth/me` goes through `lib/api.js` which always sends `Authorization: Bearer <token>`.
 
 ## Backend Conventions
 - All responses `{ success, data, message }` (`backend/server.js:48-49`). Indonesian messages.
@@ -47,7 +47,7 @@ VITE_API_URL=http://localhost:5000       # if empty, fetch uses relative "" → 
 - ESM everywhere — use `import`/`export`, `.js` extensions required.
 
 ## Frontend Conventions
-- Routing (`src/routes/router.jsx:12`): `Guard` reads `authStore.user.role`. `/admin*` admin-only, `/pos` admin/kasir/waiter, `/waiter` admin/waiter/kasir, `/kitchen` admin/dapur. Unauthenticated → `/login`.
+- Routing (`src/routes/router.jsx:12`): `Guard` reads `authStore.user.role`. `/admin*` admin-only, `/pos`+`/waiter` admin/user (ordering), `/kitchen` admin-only. Unauthenticated → `/login`.
 - State: `stores/authStore.js` + `stores/cartStore.js` (Zustand), server state via TanStack Query. API helper `lib/api.js` uses `VITE_API_URL` base + localStorage token.
 - Supabase client `lib/supabase.js` is `null` if env missing — app runs in mock mode via `data/mock.js` (categories, menuItems, tables, ordersMock).
 - KDS realtime: `supabase.channel('kitchen').on('postgres_changes', {table:'orders'})` (documented in README, not polling).

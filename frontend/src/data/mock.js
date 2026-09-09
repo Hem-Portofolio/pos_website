@@ -50,8 +50,6 @@ export const ordersMock = [
 ];
 
 export const demoUsers = [
-  { role: "admin", email: "admin@warungpos.id", pass: "admin123", name: "Owner", label: "Admin / Owner" },
-  { role: "kasir", email: "kasir@warungpos.id", pass: "kasir123", name: "Kasir 1", label: "Kasir" },
-  { role: "waiter", email: "waiter@warungpos.id", pass: "waiter123", name: "Sari", label: "Pelayan" },
-  { role: "dapur", email: "dapur@warungpos.id", pass: "dapur123", name: "Dapur", label: "Dapur" },
+  { role: "admin", email: "admin@warungpos.id", pass: "admin123", name: "Owner", label: "Admin" },
+  { role: "user", email: "user@warungpos.id", pass: "user123", name: "Pelanggan", label: "User" },
 ];

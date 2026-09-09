@@ -9,7 +9,7 @@ create table if not exists public.users (
   id uuid primary key references auth.users(id) on delete cascade,
   name text not null,
   email text unique not null,
-  role text not null check (role in ('admin','kasir','waiter','dapur')),
+  role text not null check (role in ('admin','user')),
   created_at timestamptz default now()
 );
 
@@ -102,25 +102,25 @@ create policy "tables_read" on public.tables for select to authenticated using (
 drop policy if exists "tables_write_admin" on public.tables;
 create policy "tables_write_admin" on public.tables for all to authenticated using (public.current_role()='admin') with check (public.current_role()='admin');
 
--- orders: read semua login, insert waiter/kasir/admin, update dapur/kasir/admin
+-- orders: read semua login, insert user/admin, update admin/user (admin kelola dapur)
 drop policy if exists "orders_read" on public.orders;
 create policy "orders_read" on public.orders for select to authenticated using (true);
 drop policy if exists "orders_insert" on public.orders;
-create policy "orders_insert" on public.orders for insert to authenticated with check (public.current_role() in ('admin','kasir','waiter'));
+create policy "orders_insert" on public.orders for insert to authenticated with check (public.current_role() in ('admin','user'));
 drop policy if exists "orders_update" on public.orders;
-create policy "orders_update" on public.orders for update to authenticated using (public.current_role() in ('admin','kasir','dapur','waiter')) with check (public.current_role() in ('admin','kasir','dapur','waiter'));
+create policy "orders_update" on public.orders for update to authenticated using (public.current_role() in ('admin','user')) with check (public.current_role() in ('admin','user'));
 
 -- order_items: ikut orders
 drop policy if exists "oi_read" on public.order_items;
 create policy "oi_read" on public.order_items for select to authenticated using (true);
 drop policy if exists "oi_write" on public.order_items;
-create policy "oi_write" on public.order_items for all to authenticated using (public.current_role() in ('admin','kasir','waiter')) with check (public.current_role() in ('admin','kasir','waiter'));
+create policy "oi_write" on public.order_items for all to authenticated using (public.current_role() in ('admin','user')) with check (public.current_role() in ('admin','user'));
 
--- payments: read admin/kasir, insert kasir/admin
+-- payments: read/insert admin & user (user bayar pesanannya sendiri)
 drop policy if exists "pay_read" on public.payments;
-create policy "pay_read" on public.payments for select to authenticated using (public.current_role() in ('admin','kasir'));
+create policy "pay_read" on public.payments for select to authenticated using (public.current_role() in ('admin','user'));
 drop policy if exists "pay_insert" on public.payments;
-create policy "pay_insert" on public.payments for insert to authenticated with check (public.current_role() in ('admin','kasir'));
+create policy "pay_insert" on public.payments for insert to authenticated with check (public.current_role() in ('admin','user'));
 
 -- Seed kategori & meja (opsional)
 insert into public.categories (name) values ('Nasi & Utama'),('Mie & Sop'),('Ayam & Ikan'),('Minuman'),('Penutup') on conflict do nothing;

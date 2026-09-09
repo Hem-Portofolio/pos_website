@@ -52,7 +52,7 @@ export default function KDS(){
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="font-display text-[26px] font-bold tracking-tight leading-none">Layar Dapur</h1>
-          <p className="text-sm text-stone-600 mt-1.5">Pesanan dari pelayan/kasir muncul otomatis. Tap untuk ubah status.</p>
+          <p className="text-sm text-stone-600 mt-1.5">Pesanan dari user muncul otomatis. Tap untuk ubah status (khusus admin).</p>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={load} className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white border border-stone-200 hover:bg-stone-50">Muat ulang</button>
@@ -123,7 +123,7 @@ export default function KDS(){
       )}
 
       <div className="rounded-2xl bg-ink text-white px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-sm">
-        <span><b>Alur:</b> Pelayan/Kasir → Menunggu → Memasak → Siap → Kasir bayar (meja kosong).</span>
+        <span><b>Alur:</b> User pesan → Menunggu → Memasak → Siap → Bayar (meja kosong).</span>
         <span className="text-xs px-2.5 py-1 rounded-full bg-white/10 border border-white/20">{orders.length} pesanan aktif</span>
       </div>
     </div>

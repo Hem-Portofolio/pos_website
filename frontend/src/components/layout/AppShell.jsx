@@ -16,19 +16,21 @@ const navByRole = {
   admin: [
     { section: "Operasional" },
     { to: "/admin", label: "Ringkasan", icon: I.grid, end: true },
+    { to: "/waiter", label: "Pesan", icon: I.users },
     { to: "/pos", label: "Kasir", icon: I.cart },
-    { to: "/waiter", label: "Pelayan", icon: I.users },
     { to: "/kitchen", label: "Dapur", icon: I.flame },
     { section: "Kelola" },
     { to: "/admin/menu", label: "Menu", icon: I.book },
     { to: "/admin/reports", label: "Laporan", icon: I.chart },
   ],
-  kasir: [{ section: "Operasional" }, { to: "/pos", label: "Kasir", icon: I.cart }],
-  waiter: [{ section: "Operasional" }, { to: "/waiter", label: "Pelayan", icon: I.users }, { to: "/pos", label: "Kasir", icon: I.cart }],
-  dapur: [{ section: "Operasional" }, { to: "/kitchen", label: "Dapur", icon: I.flame }],
+  user: [
+    { section: "Pesan" },
+    { to: "/waiter", label: "Pesan", icon: I.users },
+    { to: "/pos", label: "Kasir", icon: I.cart },
+  ],
 };
 
-const roleLabel = { admin:"Owner", kasir:"Kasir", waiter:"Pelayan", dapur:"Dapur" };
+const roleLabel = { admin:"Admin", user:"User" };
 
 export function AppShell({ children }) {
   const { user, logout } = useAuthStore();

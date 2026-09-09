@@ -26,7 +26,7 @@ r.get("/", async (req, res) => {
   } catch (e) { return res.status(500).json({ success: false, data: null, message: e.message }); }
 });
 
-// POST /api/orders — buat pesanan (pelayan/kasir)
+// POST /api/orders — buat pesanan (user/admin)
 r.post("/", orderValidators.create, async (req, res) => {
   const client = (await import("../config/db.js")).pool;
   const conn = await client.connect();
@@ -72,7 +72,7 @@ r.post("/", orderValidators.create, async (req, res) => {
   } finally { conn.release(); }
 });
 
-// PATCH / PUT /api/orders/:id/status — dapur/kasir update status
+// PATCH / PUT /api/orders/:id/status — admin (dapur) update status
 async function updateStatus(req, res) {
   try {
     const { status } = req.body;

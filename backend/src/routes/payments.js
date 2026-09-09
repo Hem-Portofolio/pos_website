@@ -7,8 +7,8 @@ import { paymentValidators } from "../middleware/validate.js";
 const r = Router();
 r.use(authMiddleware);
 
-// POST /api/payments — kasir/admin
-r.post("/", roleMiddleware(["admin","kasir"]), paymentValidators, async (req, res) => {
+// POST /api/payments — user/admin (user pesan & bayar sendiri)
+r.post("/", roleMiddleware(["admin","user"]), paymentValidators, async (req, res) => {
   const client = (await import("../config/db.js")).pool;
   const conn = await client.connect();
   try {
@@ -36,7 +36,7 @@ r.post("/", roleMiddleware(["admin","kasir"]), paymentValidators, async (req, re
   } finally { conn.release(); }
 });
 
-r.get("/", roleMiddleware(["admin","kasir"]), async (req, res) => {
+r.get("/", roleMiddleware(["admin","user"]), async (req, res) => {
   try {
     const { rows } = await query(`select p.*, o.table_id, o.total from payments p join orders o on o.id=p.order_id order by p.paid_at desc limit 50`);
     return res.json({ success: true, data: rows, message: "OK" });

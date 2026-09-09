@@ -22,8 +22,10 @@ export const router = createBrowserRouter([
   { path: "/admin", element: <Guard roles={["admin"]}><AdminDashboard /></Guard> },
   { path: "/admin/menu", element: <Guard roles={["admin"]}><MenuManager /></Guard> },
   { path: "/admin/reports", element: <Guard roles={["admin"]}><Reports /></Guard> },
-  { path: "/pos", element: <Guard roles={["admin","kasir","waiter"]}><POSTerminal /></Guard> },
-  { path: "/waiter", element: <Guard roles={["admin","waiter","kasir"]}><TableMap /></Guard> },
-  { path: "/kitchen", element: <Guard roles={["admin","dapur"]}><KDS /></Guard> },
+  // ordering — admin & user biasa
+  { path: "/pos", element: <Guard roles={["admin","user"]}><POSTerminal /></Guard> },
+  { path: "/waiter", element: <Guard roles={["admin","user"]}><TableMap /></Guard> },
+  // dapur — hanya admin
+  { path: "/kitchen", element: <Guard roles={["admin"]}><KDS /></Guard> },
   { path: "*", element: <Navigate to="/login" replace /> },
 ]);

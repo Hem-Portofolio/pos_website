@@ -7,7 +7,7 @@ export async function me(req, res) {
 // Opsional: proxy register/login lewat backend (alternatif: frontend langsung ke Supabase Auth)
 export async function register(req, res) {
   try {
-    const { name, email, password, role = "waiter" } = req.body;
+    const { name, email, password, role = "user" } = req.body;
     if (!email || !password) return res.status(400).json({ success: false, data: null, message: "Email & password wajib" });
     const { data, error } = await supabaseAnon.auth.signUp({ email, password, options: { data: { name, role } } });
     if (error) return res.status(400).json({ success: false, data: null, message: error.message });
