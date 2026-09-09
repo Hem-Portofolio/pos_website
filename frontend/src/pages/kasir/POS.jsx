@@ -7,6 +7,7 @@ import { rupiah } from "../../lib/format";
 import { api } from "../../lib/api";
 import { categories as fallbackCats } from "../../data/mock";
 import { useCartStore } from "../../stores/cartStore";
+import { useAuthStore } from "../../stores/authStore";
 
 export default function POSTerminal() {
   const [cats, setCats] = useState(fallbackCats);
@@ -16,6 +17,8 @@ export default function POSTerminal() {
   const [cat, setCat] = useState("all");
   const [q, setQ] = useState("");
   const { items, add, inc, dec, remove, total, count, tableId, setTable, clear } = useCartStore();
+  const { user } = useAuthStore();
+  const isAdmin = user?.role === "admin";
   const [customerName, setCustomerName] = useState("");
   const [showPay, setShowPay] = useState(null); // order to pay
   const [method, setMethod] = useState("cash");
@@ -84,6 +87,7 @@ export default function POSTerminal() {
 
   async function confirmPay(){
     if(!showPay) return;
+    if(!isAdmin){ setMsg({type:"error", text:"Hanya admin yang bisa melakukan pembayaran."}); return; }
     if(method==="cash" && change<0) return;
     setLoading(true);
     try{
@@ -102,7 +106,7 @@ export default function POSTerminal() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="font-display text-[26px] font-bold leading-none tracking-tight">Kasir</h1>
-          <p className="text-sm text-stone-600 mt-1.5">Buat pesanan → masuk dapur → bayar setelah siap.</p>
+          <p className="text-sm text-stone-600 mt-1.5">{isAdmin ? "Buat pesanan → masuk dapur → bayar setelah siap." : "Buat pesanan → masuk dapur → admin akan proses pembayaran."}</p>
         </div>
         <div className="flex items-center gap-2 bg-white border border-stone-200 rounded-full pl-3 pr-2 py-1.5 shadow-card">
           <span className="text-xs font-bold text-stone-600">Meja</span>
@@ -114,6 +118,7 @@ export default function POSTerminal() {
       </div>
 
       {msg.text && <div className={`rounded-xl border text-sm px-4 py-3 ${msg.type==="success"?"bg-sage/10 border-sage/30 text-[#1f4d1f]":"bg-red-50 border-red-200 text-red-700"}`}>{msg.text}</div>}
+      {!isAdmin && <div className="rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm px-4 py-3">Kamu login sebagai <b>User</b> — hanya bisa pesan. Pembayaran hanya oleh <b>Admin</b> di halaman ini.</div>}
 
       <div className="grid lg:grid-cols-[1fr_380px] gap-5 items-start">
         <div className="space-y-3">
@@ -190,7 +195,11 @@ export default function POSTerminal() {
                     <div className="text-sm font-semibold leading-none truncate">Meja {o.table_number ?? "?"} · {o.customer_name || "Tanpa nama"}</div>
                     <div className="text-xs text-stone-600 mt-0.5 flex items-center gap-2"><Badge status={o.status}>{o.status}</Badge> <span className="tabular">{rupiah(o.total)}</span> · <span>{o.items?.length||0} item</span></div>
                   </div>
-                  <Button size="sm" onClick={()=>{ setShowPay(o); setMethod("cash"); setPaid(""); }}>Bayar</Button>
+                  {isAdmin ? (
+                    <Button size="sm" onClick={()=>{ setShowPay(o); setMethod("cash"); setPaid(""); }}>Bayar</Button>
+                  ) : (
+                    <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-stone-100 border text-stone-500">Menunggu admin</span>
+                  )}
                 </div>
               ))}
             </div>

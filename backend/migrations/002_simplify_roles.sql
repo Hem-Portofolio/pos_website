@@ -18,6 +18,6 @@ drop policy if exists "oi_write" on public.order_items;
 create policy "oi_write" on public.order_items for all to authenticated using (public.current_role() in ('admin','user')) with check (public.current_role() in ('admin','user'));
 
 drop policy if exists "pay_read" on public.payments;
-create policy "pay_read" on public.payments for select to authenticated using (public.current_role() in ('admin','user'));
+create policy "pay_read" on public.payments for select to authenticated using (public.current_role() = 'admin');
 drop policy if exists "pay_insert" on public.payments;
-create policy "pay_insert" on public.payments for insert to authenticated with check (public.current_role() in ('admin','user'));
+create policy "pay_insert" on public.payments for insert to authenticated with check (public.current_role() = 'admin');
