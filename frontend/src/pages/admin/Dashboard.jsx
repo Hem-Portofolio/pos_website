@@ -30,7 +30,6 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   async function load(){
-    setLoading(true);
     try{
       const [tRes, oRes, mRes, pRes] = await Promise.all([
         api.get("/api/tables").catch(()=>({data:[]})),
@@ -44,7 +43,7 @@ export default function AdminDashboard() {
       setPayments(pRes.data||[]);
     }finally{ setLoading(false); }
   }
-  useEffect(()=>{ load(); const id=setInterval(load, 5000); return ()=>clearInterval(id); },[]);
+  useEffect(()=>{ load(); const id=setInterval(load, 10000); return ()=>clearInterval(id); },[]);
 
   const pending = orders.filter(o=>o.status==="pending").length;
   const activeOrders = orders.filter(o=>["pending","cooking","ready"].includes(o.status));
